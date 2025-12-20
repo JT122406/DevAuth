@@ -17,4 +17,17 @@ dependencies {
     compileOnly("org.apache.httpcomponents:httpclient:4.5.13")   // 1.18.2: 4.5.13  1.12.2: 4.3.3   1.8.9: 4.3.3
 }
 
+val java11 by sourceSets.creating {
+    compileClasspath += sourceSets.main.get().compileClasspath
+    compileClasspath += sourceSets.main.get().output
+}
+
+tasks.named<JavaCompile>("compileJava11Java") {
+    options.release = 11
+}
+
+tasks.jar {
+    from(java11.output)
+}
+
 configurePublishing()

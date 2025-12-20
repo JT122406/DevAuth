@@ -6,8 +6,6 @@ import me.djtheredstoner.devauth.common.auth.microsoft.Constants;
 import me.djtheredstoner.devauth.common.auth.microsoft.MSAUtil;
 import me.djtheredstoner.devauth.common.auth.microsoft.token.OAuthToken;
 import me.djtheredstoner.devauth.common.util.Util;
-import me.djtheredstoner.devauth.common.util.request.Http;
-import me.djtheredstoner.devauth.common.util.request.HttpBuilder;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
@@ -67,11 +65,7 @@ public class CodeOAuthProvider extends OAuthProvider {
         );
         params.putAll(extraParams);
 
-        JsonObject res = new HttpBuilder<Map<String, String>, JsonObject>(OAUTH_TOKEN_URL)
-            .body(Http::urlEncodedBody, params)
-            .responseHandler(Http::checkStatus)
-            .execute()
-            .into(Http::jsonResponse);
+        JsonObject res = Util.client.urlEncodedJsonPost(OAUTH_TOKEN_URL, params);
 
         return OAuthToken.fromJson(res);
     }

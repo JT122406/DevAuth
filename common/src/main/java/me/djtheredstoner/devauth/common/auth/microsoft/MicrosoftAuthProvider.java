@@ -14,12 +14,8 @@ import me.djtheredstoner.devauth.common.auth.microsoft.token.TokenKey;
 import me.djtheredstoner.devauth.common.auth.microsoft.token.XBLToken;
 import me.djtheredstoner.devauth.common.config.Account;
 import me.djtheredstoner.devauth.common.util.Util;
-import me.djtheredstoner.devauth.common.util.request.Http;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -128,7 +124,7 @@ public class MicrosoftAuthProvider implements IAuthProvider {
         object.addProperty("RelyingParty", "http://auth.xboxlive.com");
         object.addProperty("TokenType", "JWT");
 
-        JsonObject res = Util.jsonPost(XBL_URL, object);
+        JsonObject res = Util.client.jsonPost(XBL_URL, object);
 
         return XBLToken.fromJson(res, true);
     }
@@ -148,7 +144,7 @@ public class MicrosoftAuthProvider implements IAuthProvider {
         object.addProperty("RelyingParty", "rp://api.minecraftservices.com/");
         object.addProperty("TokenType", "JWT");
 
-        JsonObject res = Util.jsonPost(XSTS_URL, object);
+        JsonObject res = Util.client.jsonPost(XSTS_URL, object);
 
         return XBLToken.fromJson(res, true);
     }
@@ -159,7 +155,7 @@ public class MicrosoftAuthProvider implements IAuthProvider {
         JsonObject object = new JsonObject();
         object.addProperty("identityToken", "XBL3.0 x=" + xstsToken.getUserHash() + ";" + xstsToken.getToken());
 
-        JsonObject res = Util.jsonPost(MINECRAFT_URL, object);
+        JsonObject res = Util.client.jsonPost(MINECRAFT_URL, object);
 
         return Token.fromJson(res);
     }
@@ -181,18 +177,10 @@ public class MicrosoftAuthProvider implements IAuthProvider {
         Token mcSession = get(TokenKey.SESSION_TOKEN);
 
         try {
-            HttpGet request = new HttpGet(MINECRAFT_PROFILE_URL);
-            request.setHeader("Authorization", "Bearer " + mcSession.getToken());
-
-            HttpResponse response = Util.client.execute(request);
-            String body = EntityUtils.toString(response.getEntity());
-
-            if (response.getStatusLine().getStatusCode() == 404) {
-                throw new RuntimeException("404 received for minecraft profile, does the user own the game?");
-            }
-            Http.checkStatus(response, body);
-
-            JsonObject profileObject = Util.parser.parse(body).getAsJsonObject();
+            JsonObject profileObject = Util.client.authorizedJsonGet(
+                MINECRAFT_PROFILE_URL,
+                "Bearer " + mcSession.getToken()
+            );
 
             return new SessionData(
                 mcSession.getToken(),
@@ -202,7 +190,7 @@ public class MicrosoftAuthProvider implements IAuthProvider {
                 "{}"
             );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch minecraft profile", e);
+            throw new RuntimeException("Failed to fetch minecraft profile, does the user own the game?", e);
         }
     }
 

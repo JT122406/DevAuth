@@ -1,6 +1,5 @@
-package me.djtheredstoner.devauth.common.util.request;
+package me.djtheredstoner.devauth.common.util.request.apache;
 
-import me.djtheredstoner.devauth.common.util.Util;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -68,7 +67,7 @@ public class HttpBuilder<B, R> {
             HttpEntity entity = bodyCreator.apply(bodyData);
             req.setEntity(entity);
 
-            HttpResponse res = Util.client.execute(req);
+            HttpResponse res = ApacheClient.client.execute(req);
             String resBody = null;
             if (res.getEntity().getContentType() != null) {
                 resBody = EntityUtils.toString(res.getEntity());
