@@ -6,12 +6,12 @@ Safely authenticate Minecraft accounts in development environments.
 
 # Minecraft Version Support
 
-| Versions               | Module         | Supported |
-|------------------------|----------------|:---------:|
-| 1.14 - 1.21 Fabric     | `fabric`       |     ✅     |
-| 1.8.9 - 1.12.2 Forge   | `forge-legacy` |     ✅     |
-| 1.14 - 1.21 Forge      | `forge-latest` |     ✅     |
-| 1.20.4 - 1.21 NeoForge | `neoforge`     |     ✅     |
+| Versions                  | Module         | Supported |
+|---------------------------|----------------|:---------:|
+| 1.14 - 1.21.11 Fabric     | `fabric`       |     ✅     |
+| 1.8.9 - 1.12.2 Forge      | `forge-legacy` |     ✅     |
+| 1.14 - 1.21.11 Forge      | `forge-latest` |     ✅     |
+| 1.20.4 - 1.21.11 NeoForge | `neoforge`     |     ✅     |
 
 **Note:** If a version isn't listed above as supported, just try it.
 Additionally, the fabric module may work on other fabric-based loaders (such as legacy-fabric).
