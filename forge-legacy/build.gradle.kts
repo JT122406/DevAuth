@@ -4,7 +4,7 @@ import me.djtheredstoner.devauth.build.configureMcProject
 plugins {
     id("gg.essential.loom")
     id("dev.architectury.architectury-pack200")
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
 }
 
 loom {
