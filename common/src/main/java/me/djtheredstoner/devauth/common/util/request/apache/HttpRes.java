@@ -1,4 +1,4 @@
-package me.djtheredstoner.devauth.common.util.request;
+package me.djtheredstoner.devauth.common.util.request.apache;
 
 import org.apache.http.HttpResponse;
 

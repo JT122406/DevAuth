@@ -1,28 +1,15 @@
 package me.djtheredstoner.devauth.common.auth.microsoft;
 
 import me.djtheredstoner.devauth.common.auth.microsoft.token.Token;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 public class MSAUtil {
-
-    public static List<NameValuePair> buildNameValuePairs(Map<String, String> params) {
-        List<NameValuePair> list = new ArrayList<>();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            list.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        return list;
-    }
 
     public static String buildQuery(Map<String, String> params) {
         try {
@@ -39,9 +26,21 @@ public class MSAUtil {
     }
 
     public static Map<String, String> parseQuery(String query) {
-        return URLEncodedUtils
-            .parse(query, StandardCharsets.UTF_8)
-            .stream().collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+        Map<String, String> map = new LinkedHashMap<>();
+
+        try {
+            for (String part : query.split("&")) {
+                String[] kv = part.split("=");
+                map.put(
+                    URLDecoder.decode(kv[0], "UTF-8"),
+                    URLDecoder.decode(kv[1], "UTF-8")
+                );
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return map;
     }
 
     public static boolean isValid(Token token) {
