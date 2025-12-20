@@ -9,3 +9,6 @@ displayName = "DevAuth"
 authors = "DJtheRedstoner"
 description = "Safely authenticate Minecraft accounts in development environments."
 logoFile = "assets/devauth/logo.png"
+
+[[mixins]]
+config = "mixins.devauth.json"
